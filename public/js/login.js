@@ -1,4 +1,3 @@
-// login.js
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("login-form");
 
@@ -10,16 +9,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const password = document.getElementById("password").value;
 
       try {
-        const response = await axios.post("/api/login", {
-          // Ensure correct path
-          email,
-          password,
-        });
-
+        const response = await axios.post("/api/login", { email, password });
         alert(response.data.message);
 
         if (response.data.success) {
           localStorage.setItem("token", response.data.token);
+          localStorage.setItem("userId", response.data.userId);
+          localStorage.setItem("userName", response.data.name);
           window.location.href = "/chat";
         }
       } catch (error) {

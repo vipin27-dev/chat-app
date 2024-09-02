@@ -9,4 +9,8 @@ router.post("/signup",(req,res)=>{
     chatController.signupUser(req,res);
 });
 
+router.post("/login", (req, res) => {
+    chatController.loginUser(req, res);
+  });
+  
 module.exports = router;

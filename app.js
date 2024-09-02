@@ -14,7 +14,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', userRoutes);
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'signup.html'));
+    res.sendFile(path.join(__dirname, 'views', 'login.html'));
+});
+
+app.get('/signup', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'signup.html'));
 });
 
 sequelize.sync()

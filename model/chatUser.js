@@ -1,7 +1,7 @@
-const Sequelize = require("sequelize");
-const sequelize = require("../util/database");
+const Sequelize = require('sequelize');
+const sequelize = require('../util/database');
 
-const User = sequelize.define("ChatUser", {
+const User = sequelize.define('ChatUser', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -14,7 +14,7 @@ const User = sequelize.define("ChatUser", {
   },
   phno: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   email: {
     type: Sequelize.STRING,

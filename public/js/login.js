@@ -10,7 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const password = document.getElementById("password").value;
 
       try {
-        const response = await axios.post("/api/login", {  // Ensure correct path
+        const response = await axios.post("/api/login", {
+          // Ensure correct path
           email,
           password,
         });
@@ -19,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (response.data.success) {
           localStorage.setItem("token", response.data.token);
-          window.location.href = "/";
+          window.location.href = "/chat";
         }
       } catch (error) {
         if (

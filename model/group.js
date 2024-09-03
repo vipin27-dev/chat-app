@@ -1,10 +1,9 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../util/database');
-const ChatMessage = require('./chatMessage');
 const GroupMember = require('./groupmember');
 const Message = require('./groupMessage');
 
-const User = sequelize.define('ChatUser', {
+const Group = sequelize.define('Group', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -15,17 +14,15 @@ const User = sequelize.define('ChatUser', {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  phno: {
-    type: Sequelize.STRING,
+  description: {
+    type: Sequelize.TEXT,
+    allowNull: true,
+  },
+  createdBy: {
+    type: Sequelize.INTEGER,
     allowNull: false,
   },
-  email: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  password: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
+}, {
+  timestamps: true,
 });
-module.exports = User;
+module.exports = Group;

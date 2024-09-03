@@ -12,6 +12,7 @@
 <body>
     <div class="container chat-container">
         <h1>Hello, welcome to the Chat App!</h1>
+        <button id="create-group-btn" class="btn btn-success mb-3">Create Group</button>
         <div id="user-list"></div>
         <div class="chat-box">
             <div id="messages"></div>
@@ -24,6 +25,11 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.4/axios.min.js"></script>
     <script src="/js/chat.js"></script>
+    <script>
+        document.getElementById('create-group-btn').addEventListener('click', () => {
+            window.location.href = '/group.html';
+        });
+    </script>
 </body>
 
 </html>

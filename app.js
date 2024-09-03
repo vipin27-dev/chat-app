@@ -4,6 +4,7 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const sequelize = require("./util/database");
+require("./model/association")
 const userRoutes = require("./routes/route");
 const app = express();
 
@@ -23,6 +24,9 @@ app.get("/signup", (req, res) => {
 
 app.get("/chat", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "chat.html"));
+});
+app.get('/groups', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'group.html'));
 });
 sequelize
   .sync()

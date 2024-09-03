@@ -3,6 +3,7 @@ const ChatMessage = require('./chatMessage');
 const Group = require('./group');
 const GroupMember = require('./groupmember');
 const Message = require('./groupMessage');
+
 // User - ChatMessage
 User.hasMany(ChatMessage, { foreignKey: 'userId', as: 'messages' });
 ChatMessage.belongsTo(User, { foreignKey: 'userId', as: 'user' });

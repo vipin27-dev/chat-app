@@ -1,6 +1,6 @@
 const User = require('../model/chatUser');
 const ChatMessage = require('../model/chatMessage');
-
+const { Op } = require("sequelize");
 exports.getUsers = async (req, res) => {
   try {
     const users = await User.findAll();
@@ -12,17 +12,28 @@ exports.getUsers = async (req, res) => {
 };
 
 exports.getMessages = async (req, res) => {
+  const lastMessageId = req.query.lastMessageId || 0;
+
   try {
     const messages = await ChatMessage.findAll({
+      where: {
+        id: {
+          [Op.gt]: lastMessageId // Only fetch messages greater than the lastMessageId
+        }
+      },
       include: [{ model: User, as: "user", attributes: ["name"] }],
       order: [["createdAt", "ASC"]],
     });
+
     res.status(200).json({ messages });
   } catch (error) {
     console.error("Error fetching messages:", error.message);
-    res.status(500).json({ message: "An error occurred while fetching messages" });
+    res
+      .status(500)
+      .json({ message: "An error occurred while fetching messages" });
   }
 };
+
 
 exports.sendMessage = async (req, res) => {
   const { userId, message } = req.body;

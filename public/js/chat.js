@@ -17,24 +17,47 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Function to fetch messages
-  async function fetchMessages() {
+  // Function to render messages to the DOM
+  function renderMessages(messages) {
+    messagesDiv.innerHTML = ''; // Clear previous messages
+    messages.forEach((msg) => {
+      const userName = msg.user ? msg.user.name : "Unknown User";
+      const newMessageElement = document.createElement("p");
+      newMessageElement.textContent = `${userName}: ${msg.message}`;
+      messagesDiv.appendChild(newMessageElement);
+    });
+  }
+
+  // Function to fetch all messages from local storage
+  function fetchMessagesFromLocalStorage() {
+    const storedMessages = JSON.parse(localStorage.getItem("messages")) || [];
+    renderMessages(storedMessages);
+  }
+
+  // Function to save messages to local storage
+  function saveMessagesToLocalStorage(messages) {
+    localStorage.setItem("messages", JSON.stringify(messages));
+  }
+
+  // Function to fetch new messages from the backend
+  async function fetchNewMessages() {
     try {
-      const response = await axios.get("/api/messages");
-      const messages = response.data.messages;
+      const storedMessages = JSON.parse(localStorage.getItem("messages")) || [];
+      const lastMessage = storedMessages[storedMessages.length - 1];
+      const lastMessageId = lastMessage ? lastMessage.id : 0;
 
-      // Clear the messages div before appending new messages
-      messagesDiv.innerHTML = '';
+      const response = await axios.get(`/api/messages?lastMessageId=${lastMessageId}`);
+      const newMessages = response.data.messages;
 
-      // Render all messages
-      messages.forEach((msg) => {
-        const userName = msg.user ? msg.user.name : "Unknown User";
-        const newMessageElement = document.createElement("p");
-        newMessageElement.textContent = `${userName}: ${msg.message}`;
-        messagesDiv.appendChild(newMessageElement);
-      });
+      if (newMessages.length > 0) {
+        const updatedMessages = [...storedMessages, ...newMessages];
+        const recentMessages = updatedMessages.slice(-10); // Keep only the last 10 messages
+
+        saveMessagesToLocalStorage(recentMessages);
+        renderMessages(recentMessages);
+      }
     } catch (error) {
-      console.error("Error fetching messages:", error);
+      console.error("Error fetching new messages:", error);
     }
   }
 
@@ -42,10 +65,9 @@ document.addEventListener("DOMContentLoaded", () => {
   chatForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const message = messageInput.value;
-    
-    // Get userId from localStorage
+
     const userId = localStorage.getItem("userId");
-    
+
     if (!userId) {
       console.error("User ID not found in local storage.");
       return;
@@ -57,15 +79,15 @@ document.addEventListener("DOMContentLoaded", () => {
         message,
       });
       messageInput.value = "";
+
+      fetchNewMessages(); // Fetch new messages after sending
     } catch (error) {
       console.error("Error sending message:", error);
     }
   });
 
-  // Start polling every second to fetch new messages
-  setInterval(fetchMessages, 1000);
-
-  // Initial fetch
+  // Initialize the chat
   fetchUsers();
-  fetchMessages();
+  fetchMessagesFromLocalStorage(); // Load messages from local storage on initial load
+  setInterval(fetchNewMessages, 1000); // Poll for new messages every second
 });
